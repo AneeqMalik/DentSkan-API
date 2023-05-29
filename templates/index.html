@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Auto API Requester</title>
+</head>
+<body>
+    <h1>Flask Auto API Requester</h1>
+
+    <div id="responseContainer">
+        {% if response %}
+            <pre>{{ response | tojson }}</pre>
+        {% else %}
+            <p>No response yet.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Access the response object in JavaScript
+        var response = JSON.parse('{{ response | tojson | safe }}');
+        console.log(response);
+    </script>
+</body>
+</html>
