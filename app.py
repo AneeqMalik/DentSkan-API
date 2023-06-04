@@ -63,7 +63,7 @@ def auto_api_request_loop():
         print('API Response:', response)
 
         # Wait for 2 minutes before sending the next request
-        time.sleep(120)  # 120 seconds = 2 minutes
+        time.sleep(600)  # 600 seconds = 10 minutes
 
 # Run the Flask app and start the auto API request loop
 if __name__ == '__main__':
