@@ -25,6 +25,37 @@ image_paths = ['static/image1.jpg', 'static/image2.png', 'static/image3.jpg']
 # Specify the API endpoint URL
 api_url = 'https://dentskan.azurewebsites.net/dentSkan/v1/cropper_image'
 
+venue_url = 'https://venueconnect.azurewebsites.net/api/getvenues'
+
+
+def venue_paymentid_request():
+    while True:
+        # Generate random product name and price
+        product_name = "Product" + str(random.randint(1, 1000))
+        product_price = random.randint(100, 1000)
+        server_endpoint = "https://venueconnect-payment-server.azurewebsites.net/generate-price"
+
+        try:
+            payload = {
+                "price": product_price,
+                "productName": product_name
+            }
+
+            response = requests.post(server_endpoint, json=payload)
+            response.raise_for_status()  # Raise an exception for non-200 status codes
+            
+            data = response.json()
+            price_id = data.get("priceId")
+            if price_id:
+                print('Price ID:', price_id)
+            else:
+                print('Price ID not found in the response')
+
+        except requests.exceptions.RequestException as err:
+            print("Failed to generate Price ID:", err)
+
+        time.sleep(20)  # 600 seconds = 10 minutes
+
 # Function to send the API request
 def send_api_request(image_file_path, api_url):
     # Create the form data payload
@@ -50,6 +81,7 @@ def send_api_request(image_file_path, api_url):
         print("Error sending API request:", str(e))
         return {'error': 'Error sending API request'}
 
+
 # Main loop to send requests every 2 minutes
 def auto_api_request_loop():
     while True:
@@ -57,10 +89,13 @@ def auto_api_request_loop():
         image_path = random.choice(image_paths)
 
         # Call the function to send the API request
-        response = send_api_request(image_path, api_url)
+        dentSkan_response = send_api_request(image_path, api_url)
+
+
+        response =  requests.get(venue_url)
 
         # Log the response to the browser console
-        print('API Response:', response)
+        print('Venue Connect API Response:', response.json())
 
         # Wait for 2 minutes before sending the next request
         time.sleep(600)  # 600 seconds = 10 minutes
